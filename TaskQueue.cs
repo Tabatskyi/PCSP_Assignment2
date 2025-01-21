@@ -9,11 +9,26 @@
             get
             {
                 lock (queue)
+                {
                     return queue.Count;
+                }
             }
         }
 
-        public void Enqueue(Action action) => queue.Enqueue(action);
-        public Action Dequeue() => queue.Dequeue();
+        public void Enqueue(Action action)
+        {
+            lock (queue)
+            {
+                queue.Enqueue(action);
+            }
+        }
+
+        public Action Dequeue()
+        {
+            lock (queue)
+            {
+                return queue.Dequeue();
+            }
+        }
     }
 }
