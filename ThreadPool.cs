@@ -1,4 +1,6 @@
-﻿namespace PCSP_Assignment2;
+﻿
+
+namespace PCSP_Assignment2;
 
 internal class ThreadPool
 {
