@@ -11,7 +11,6 @@ class Program
         const int minTime = 5000;
         const int maxTime = 10000;
         TaskQueue taskQueue = new();
-        CountdownEvent countdown = new(totalTasks);
 
         for (int i = 1; i <= totalTasks; i++)
         {
@@ -21,16 +20,14 @@ class Program
                 int time = random.Next(minTime, maxTime);
                 Thread.Sleep(time);
                 Console.WriteLine($"Task {taskNumber} is done with time: {time}ms");
-                countdown.Signal();
             });
         }
 
         ThreadPool threadPool = new(taskQueue, workerThreads);
         threadPool.Start();
 
-        countdown.Wait();
+        threadPool.WaitAllTasks();
 
-        //threadPool.Stop();
-        //threadPool.WaitAll();
+        threadPool.Stop();
     }
 }
