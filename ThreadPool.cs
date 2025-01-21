@@ -3,7 +3,7 @@
 internal class ThreadPool
 {
     private readonly int workerThreads;
-    private readonly Queue<Action> queue = new();
+    private readonly TaskQueue queue = new();
     private readonly List<Task> tasks = [];
     private readonly CancellationTokenSource cts = new();
 
@@ -31,6 +31,7 @@ internal class ThreadPool
                 if (queue.Count > 0)
                 {
                     action = queue.Dequeue();
+                    Console.WriteLine($"Task is running on thread {Environment.CurrentManagedThreadId}");
                 }
             }
             action?.Invoke();
@@ -39,19 +40,13 @@ internal class ThreadPool
 
     public void EnqueueTask(Action action)
     {
-        lock (queue)
-        {
-            queue.Enqueue(action);
-            Monitor.Pulse(queue);
-        }
+        queue.Enqueue(action);
+        Console.WriteLine($"Task enqueued on thread {Environment.CurrentManagedThreadId}");
     }
 
     public void Start()
     {
-        lock (queue)
-        {
-            Monitor.PulseAll(queue);
-        }
+        queue.PulseAll();
     }
 
     public void WaitAll()
@@ -65,10 +60,7 @@ internal class ThreadPool
     public void Stop()
     {
         cts.Cancel();
-        lock (queue)
-        {
-            Monitor.PulseAll(queue);
-        }
+        queue.PulseAll();
         Task.WaitAll([.. tasks]);
     }
 }

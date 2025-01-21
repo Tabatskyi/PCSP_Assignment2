@@ -10,7 +10,6 @@ class Program
         {
             threadPool.EnqueueTask(() =>
             {
-                Console.WriteLine($"Task {i} is running on thread {Environment.CurrentManagedThreadId}");
                 Thread.Sleep(1000);
             });
         }
