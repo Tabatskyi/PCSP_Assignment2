@@ -3,51 +3,17 @@
     internal class TaskQueue
     {
         private readonly Queue<Action> queue = new();
-        public int Count => queue.Count;
 
-        public void Enqueue(Action action)
+        public int Count
         {
-            lock (queue)
+            get
             {
-                queue.Enqueue(action);
-                Monitor.Pulse(queue);
+                lock (queue)
+                    return queue.Count;
             }
         }
 
-        public Action Dequeue()
-        {
-            lock (queue)
-            {
-                while (queue.Count == 0)
-                {
-                    Monitor.Wait(queue);
-                }
-                return queue.Dequeue();
-            }
-        }
-
-        public void PulseAll()
-        {
-            lock (queue)
-            {
-                Monitor.PulseAll(queue);
-            }
-        }
-
-        public void Clear()
-        {
-            lock (queue)
-            {
-                queue.Clear();
-            }
-        }
-
-        public void Pulse()
-        {
-            lock (queue)
-            {
-                Monitor.Pulse(queue);
-            }
-        }
+        public void Enqueue(Action action) => queue.Enqueue(action);
+        public Action Dequeue() => queue.Dequeue();
     }
 }
