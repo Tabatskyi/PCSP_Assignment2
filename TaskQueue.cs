@@ -1,7 +1,8 @@
 ﻿namespace PCSP_Assignment2
 {
-    internal class TaskQueue
+    internal class TaskQueue(int capacity)
     {
+        private readonly int capacity = capacity;
         private readonly Queue<Action> queue = new();
 
         public int Count
@@ -19,6 +20,11 @@
         {
             lock (queue)
             {
+                if (queue.Count >= capacity)
+                { 
+                    Console.WriteLine("Queue is full, task discarded");
+                    return;
+                }
                 queue.Enqueue(action);
             }
         }
