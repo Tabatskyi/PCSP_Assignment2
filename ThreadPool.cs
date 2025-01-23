@@ -13,10 +13,10 @@ internal class ThreadPool
     private readonly Lock pendingTasksLock = new();
     private readonly object allTasksCompletedLock = new();
 
-    public ThreadPool(int workerThreads = 0)
+    public ThreadPool(int workerThreads = 0, int queueCapacity = 20)
     {
         this.workerThreads = workerThreads == 0 ? Environment.ProcessorCount : workerThreads;
-        queue = new TaskQueue();
+        queue = new TaskQueue(queueCapacity);
 
         for (int i = 0; i < this.workerThreads; i++)
             tasks.Add(Task.Run(Worker));
