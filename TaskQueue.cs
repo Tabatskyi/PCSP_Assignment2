@@ -19,11 +19,6 @@
         {
             lock (queue)
             {
-                if (queue.Count >= queue.Capacity)
-                { 
-                    Console.WriteLine("Queue is full, task discarded");
-                    return;
-                }
                 queue.Enqueue(action);
             }
         }
